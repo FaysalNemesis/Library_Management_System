@@ -1,7 +1,14 @@
+using Library_Management_System.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// add the dbcontext to sql
+
+builder.Services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
 
 var app = builder.Build();
 
