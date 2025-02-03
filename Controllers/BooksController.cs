@@ -13,6 +13,7 @@ namespace Library_Management_System.Controllers
             _context = context;
         }
 
+        // index action --- will return all list of books
         public async Task<IActionResult> Index()
         {
             try
@@ -27,6 +28,34 @@ namespace Library_Management_System.Controllers
                 return View("Error");
             }
 
+        }
+
+        // details index---- details of specific book
+        public async Task<IActionResult> Details (int? id)
+        {
+            if (id == null || id == 0)
+            {
+                TempData["ErrorMessage"] = "Book Id not provided";
+                return View("NotFound");
+            }
+
+            try
+            {
+                var book = await _context.Books.FirstOrDefaultAsync(m => m.BookId == id);
+                if (book == null)
+                {
+                    TempData["ErrorMessage"] = $"No book found with id {id}";
+                    return View("NotFound");
+                }
+                return View(book);
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while loading the book details.";
+                return View("Error");
+            }
+
+            return View();  
         }
     }
 }
