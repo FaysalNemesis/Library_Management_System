@@ -15,8 +15,18 @@ namespace Library_Management_System.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var books = await _context.Books.ToListAsync();
-            return View(books);
+            try
+            {
+                var books = await _context.Books.Include(b => b.BorrowRecords)
+                    .AsNoTracking().ToListAsync();
+                return View(books);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while loading the books.";
+                return View("Error");
+            }
+
         }
     }
 }
